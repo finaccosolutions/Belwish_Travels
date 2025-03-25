@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, Import as Passport, Package, Fuel as Mosque, DollarSign, Bus, Menu, X } from 'lucide-react';
+import { Plane, Import as Passport, Package, Fuel as Mosque, DollarSign, Bus, Menu, X, Globe2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -18,8 +18,13 @@ const Navbar = () => {
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-20">
-          <Link to="/" className="text-3xl font-bold text-gray-800 hover:text-rose-500 transition-colors">
-            BELSWISH
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+              <Globe2 size={28} className="text-white" />
+            </div>
+            <span className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-pink-600 bg-clip-text text-transparent hover:from-rose-600 hover:to-pink-700 transition-colors">
+              BELWISH
+            </span>
           </Link>
           
           {/* Mobile menu button */}
