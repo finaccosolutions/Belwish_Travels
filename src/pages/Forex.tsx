@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DollarSign, Repeat, ShieldCheck, Clock, Calculator } from 'lucide-react';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ScrollToTop from '../components/ScrollToTop';
 
 const Forex = () => {
+  const [amount, setAmount] = useState<string>('');
+  const [fromCurrency, setFromCurrency] = useState<string>('INR');
+  const [toCurrency, setToCurrency] = useState<string>('USD');
+  const [result, setResult] = useState<number | null>(null);
+
   const currencies = [
-    { code: 'USD', name: 'US Dollar', rate: '82.50', flag: '🇺🇸' },
-    { code: 'EUR', name: 'Euro', rate: '89.75', flag: '🇪🇺' },
-    { code: 'GBP', name: 'British Pound', rate: '104.25', flag: '🇬🇧' },
-    { code: 'AED', name: 'UAE Dirham', rate: '22.45', flag: '🇦🇪' },
-    { code: 'SAR', name: 'Saudi Riyal', rate: '22.00', flag: '🇸🇦' },
-    { code: 'SGD', name: 'Singapore Dollar', rate: '61.30', flag: '🇸🇬' }
+    { code: 'USD', name: 'US Dollar', rate: 82.50, flag: '🇺🇸' },
+    { code: 'EUR', name: 'Euro', rate: 89.75, flag: '🇪🇺' },
+    { code: 'GBP', name: 'British Pound', rate: 104.25, flag: '🇬🇧' },
+    { code: 'AED', name: 'UAE Dirham', rate: 22.45, flag: '🇦🇪' },
+    { code: 'SAR', name: 'Saudi Riyal', rate: 22.00, flag: '🇸🇦' },
+    { code: 'SGD', name: 'Singapore Dollar', rate: 61.30, flag: '🇸🇬' }
   ];
+
+  const handleCalculate = (e: React.FormEvent) => {
+    e.preventDefault();
+    const fromRate = currencies.find(c => c.code === fromCurrency)?.rate || 1;
+    const toRate = currencies.find(c => c.code === toCurrency)?.rate || 1;
+    
+    if (fromCurrency === 'INR') {
+      setResult(Number(amount) / toRate);
+    } else if (toCurrency === 'INR') {
+      setResult(Number(amount) * fromRate);
+    } else {
+      setResult((Number(amount) * fromRate) / toRate);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -39,41 +58,64 @@ const Forex = () => {
       <div className="max-w-7xl mx-auto px-4 -mt-24 mb-16 relative z-10">
         <div className="bg-white rounded-xl shadow-xl p-8">
           <h2 className="text-2xl font-bold mb-6">Currency Calculator</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-              <input
-                type="number"
-                placeholder="Enter amount"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-              />
+          <form onSubmit={handleCalculate} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
+                <select 
+                  value={fromCurrency}
+                  onChange={(e) => setFromCurrency(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                >
+                  <option value="INR">Indian Rupee (INR)</option>
+                  {currencies.map(currency => (
+                    <option key={currency.code} value={currency.code}>
+                      {currency.flag} {currency.name} ({currency.code})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
+                <select 
+                  value={toCurrency}
+                  onChange={(e) => setToCurrency(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                >
+                  {currencies.map(currency => (
+                    <option key={currency.code} value={currency.code}>
+                      {currency.flag} {currency.name} ({currency.code})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
-                <option value="INR">Indian Rupee (INR)</option>
-                {currencies.map(currency => (
-                  <option key={currency.code} value={currency.code}>
-                    {currency.flag} {currency.name} ({currency.code})
-                  </option>
-                ))}
-              </select>
+            <button type="submit" className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 transition-colors">
+              <Calculator size={20} />
+              <span>Calculate</span>
+            </button>
+          </form>
+
+          {/* Result */}
+          {result !== null && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-xl font-semibold mb-2">Exchange Rate Result</h3>
+              <p className="text-lg">
+                {amount} {fromCurrency} = <span className="text-rose-500 font-bold">{result.toFixed(2)} {toCurrency}</span>
+              </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">To</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
-                {currencies.map(currency => (
-                  <option key={currency.code} value={currency.code}>
-                    {currency.flag} {currency.name} ({currency.code})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <button className="mt-6 bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 transition-colors">
-            <Calculator size={20} />
-            <span>Calculate</span>
-          </button>
+          )}
         </div>
       </div>
 
@@ -128,48 +170,6 @@ const Forex = () => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Services */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-12 text-center">Our Forex Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {[
-            {
-              title: "Currency Exchange",
-              description: "Exchange foreign currency at competitive rates",
-              features: ["Multiple currencies available", "Real-time rates", "Quick processing"]
-            },
-            {
-              title: "Forex Cards",
-              description: "Multi-currency travel cards for convenient spending abroad",
-              features: ["Secure transactions", "Multiple currencies", "24/7 support"]
-            },
-            {
-              title: "Wire Transfers",
-              description: "Send money abroad quickly and securely",
-              features: ["Fast processing", "Competitive rates", "Secure transfers"]
-            },
-            {
-              title: "Travel Insurance",
-              description: "Comprehensive travel insurance for your journey",
-              features: ["Multiple plans", "Worldwide coverage", "24/7 assistance"]
-            }
-          ].map((service, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
-              <p className="text-gray-600 mb-6">{service.description}</p>
-              <ul className="space-y-2">
-                {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center text-gray-600">
-                    <ShieldCheck className="text-green-500 mr-2" size={18} />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
       </div>
 

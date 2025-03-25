@@ -1,9 +1,66 @@
-import React from 'react';
-import { Plane, Calendar, Users, MapPin, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plane, Calendar, Users, MapPin, Search, DollarSign, HeadphonesIcon, ShieldCheck, Star } from 'lucide-react';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ScrollToTop from '../components/ScrollToTop';
 
 const Flights = () => {
+  const [searchParams, setSearchParams] = useState({
+    from: '',
+    to: '',
+    date: '',
+    passengers: '1 Passenger'
+  });
+
+  const [searchResults, setSearchResults] = useState<null | Array<{
+    airline: string;
+    flightNo: string;
+    departure: string;
+    arrival: string;
+    duration: string;
+    price: string;
+  }>>(null);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulated flight search results
+    const mockResults = [
+      {
+        airline: 'Emirates',
+        flightNo: 'EK507',
+        departure: '10:30 AM',
+        arrival: '4:30 PM',
+        duration: '6h 00m',
+        price: '₹32,999'
+      },
+      {
+        airline: 'Qatar Airways',
+        flightNo: 'QR321',
+        departure: '2:15 PM',
+        arrival: '8:45 PM',
+        duration: '6h 30m',
+        price: '₹35,499'
+      },
+      {
+        airline: 'Air India',
+        flightNo: 'AI934',
+        departure: '11:45 AM',
+        arrival: '5:30 PM',
+        duration: '5h 45m',
+        price: '₹28,999'
+      }
+    ];
+
+    setSearchResults(mockResults);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setSearchParams(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -26,15 +83,19 @@ const Flights = () => {
       {/* Search Form */}
       <div className="max-w-7xl mx-auto px-4 -mt-24 mb-16 relative z-10">
         <div className="bg-white rounded-xl shadow-xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="col-span-1">
               <label className="block text-sm font-medium text-gray-700 mb-2">From</label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 text-gray-400" size={20} />
                 <input
                   type="text"
+                  name="from"
+                  value={searchParams.from}
+                  onChange={handleInputChange}
                   placeholder="Departure City"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                  required
                 />
               </div>
             </div>
@@ -44,8 +105,12 @@ const Flights = () => {
                 <MapPin className="absolute left-3 top-3 text-gray-400" size={20} />
                 <input
                   type="text"
+                  name="to"
+                  value={searchParams.to}
+                  onChange={handleInputChange}
                   placeholder="Arrival City"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                  required
                 />
               </div>
             </div>
@@ -55,7 +120,11 @@ const Flights = () => {
                 <Calendar className="absolute left-3 top-3 text-gray-400" size={20} />
                 <input
                   type="date"
+                  name="date"
+                  value={searchParams.date}
+                  onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                  required
                 />
               </div>
             </div>
@@ -63,7 +132,12 @@ const Flights = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Passengers</label>
               <div className="relative">
                 <Users className="absolute left-3 top-3 text-gray-400" size={20} />
-                <select className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent">
+                <select
+                  name="passengers"
+                  value={searchParams.passengers}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                >
                   <option>1 Passenger</option>
                   <option>2 Passengers</option>
                   <option>3 Passengers</option>
@@ -73,14 +147,66 @@ const Flights = () => {
             </div>
             <div className="col-span-1">
               <label className="block text-sm font-medium text-transparent mb-2">Search</label>
-              <button className="w-full bg-rose-500 hover:bg-rose-600 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors">
+              <button 
+                type="submit"
+                className="w-full bg-rose-500 hover:bg-rose-600 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors"
+              >
                 <Search size={20} />
                 <span>Search Flights</span>
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
+
+      {/* Search Results */}
+      {searchResults && (
+        <div className="max-w-7xl mx-auto px-4 mb-16">
+          <h2 className="text-2xl font-bold mb-6">Available Flights</h2>
+          <div className="grid grid-cols-1 gap-4">
+            {searchResults.map((flight, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                  <div className="flex items-center mb-4 md:mb-0">
+                    <div className="mr-6">
+                      <p className="text-sm text-gray-600">Airline</p>
+                      <p className="font-semibold">{flight.airline}</p>
+                      <p className="text-sm text-gray-500">{flight.flightNo}</p>
+                    </div>
+                    <div className="flex items-center space-x-6">
+                      <div className="text-center">
+                        <p className="text-xl font-bold">{flight.departure}</p>
+                        <p className="text-sm text-gray-600">{searchParams.from}</p>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <div className="w-24 h-px bg-gray-300 relative">
+                          <div className="absolute -top-2 right-0">
+                            <Plane size={20} className="text-rose-500 transform rotate-90" />
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">{flight.duration}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xl font-bold">{flight.arrival}</p>
+                        <p className="text-sm text-gray-600">{searchParams.to}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-6">
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-rose-500">{flight.price}</p>
+                      <p className="text-sm text-gray-500">per person</p>
+                    </div>
+                    <button className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-lg transition-colors">
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Popular Routes */}
       <div className="max-w-7xl mx-auto px-4 py-16">
@@ -127,7 +253,18 @@ const Flights = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-rose-400 font-bold">Starting from {route.price}</span>
-                    <button className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                    <button 
+                      onClick={() => {
+                        setSearchParams({
+                          from: route.from,
+                          to: route.to,
+                          date: '',
+                          passengers: '1 Passenger'
+                        });
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                    >
                       Book Now
                     </button>
                   </div>
