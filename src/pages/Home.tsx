@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Hero from '../components/Hero';
 import ServiceCard from '../components/ServiceCard';
-import { Plane, Import as Passport, Package, Fuel as Mosque, DollarSign, Bus, Star, MapPin, Users, Clock, Phone, Mail, MapPinned, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import { Plane, Import as Passport, Package, Kanban as Kaaba, DollarSign, Bus, Star, MapPin, Users, Clock, Phone, Mail, MapPinned, Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
 import ScrollToTop from '../components/ScrollToTop';
 import WhatsAppButton from '../components/WhatsAppButton';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [selectedDestType, setSelectedDestType] = useState('all');
@@ -28,10 +29,10 @@ const Home = () => {
       image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'
     },
     {
-      icon: Mosque,
+      icon: Kaaba,
       title: 'Umrah Services',
       description: 'Complete Umrah packages with spiritual guidance and support.',
-      image: 'https://images.unsplash.com/photo-1591604129939-f11307cb76bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'
+      image: 'https://images.unsplash.com/photo-1580418827493-f2b22c0a76cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'
     },
     {
       icon: DollarSign,
@@ -169,7 +170,7 @@ const Home = () => {
       </div>
 
       {/* Special Offers Section */}
-      <div className="py-20 bg-gradient-to-b from-gray-50 to-gray-100">
+      <div id="special-offers" className="py-20 bg-gradient-to-b from-gray-50 to-gray-100">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-4 text-gray-800">Special Offers</h2>
           <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
@@ -320,16 +321,16 @@ const Home = () => {
               <h3 className="text-2xl font-bold text-white mb-6">BELSWISH</h3>
               <p className="mb-6">Your trusted partner for unforgettable travel experiences since 2020.</p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                   <Facebook size={20} />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                   <Instagram size={20} />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                   <Twitter size={20} />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                   <Youtube size={20} />
                 </a>
               </div>
@@ -338,22 +339,22 @@ const Home = () => {
             <div>
               <h4 className="text-lg font-semibold text-white mb-6">Quick Links</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Destinations</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Tour Packages</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Travel Insurance</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms & Conditions</a></li>
+                <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link to="/packages" className="hover:text-white transition-colors">Destinations</Link></li>
+                <li><Link to="/packages" className="hover:text-white transition-colors">Tour Packages</Link></li>
+                <li><Link to="/insurance" className="hover:text-white transition-colors">Travel Insurance</Link></li>
+                <li><Link to="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
               </ul>
             </div>
             
             <div>
               <h4 className="text-lg font-semibold text-white mb-6">Our Services</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors">Flight Booking</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Hotel Booking</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Visa Services</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Forex Services</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Travel Insurance</a></li>
+                <li><Link to="/flights" className="hover:text-white transition-colors">Flight Booking</Link></li>
+                <li><Link to="/packages" className="hover:text-white transition-colors">Hotel Booking</Link></li>
+                <li><Link to="/visa" className="hover:text-white transition-colors">Visa Services</Link></li>
+                <li><Link to="/forex" className="hover:text-white transition-colors">Forex Services</Link></li>
+                <li><Link to="/insurance" className="hover:text-white transition-colors">Travel Insurance</Link></li>
               </ul>
             </div>
             
@@ -380,9 +381,9 @@ const Home = () => {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <p className="text-sm mb-4 md:mb-0">© 2025 BELSWISH. All rights reserved.</p>
               <div className="flex space-x-6">
-                <a href="#" className="text-sm hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="text-sm hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" className="text-sm hover:text-white transition-colors">Cookie Policy</a>
+                <Link to="/terms" className="text-sm hover:text-white transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="text-sm hover:text-white transition-colors">Terms of Service</Link>
+                <Link to="/terms" className="text-sm hover:text-white transition-colors">Cookie Policy</Link>
               </div>
             </div>
           </div>
