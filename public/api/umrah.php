@@ -1,0 +1,30 @@
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+require '/home/u443589701/domains/belwishtravels.com/secure/config.php';
+
+try {
+    $pdo = getDbConnection();
+    
+    $stmt = $pdo->query("SELECT * FROM umrah_packages WHERE is_active = 1 ORDER BY price ASC");
+    $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Decode JSON fields
+    foreach ($packages as &$package) {
+        $package['features'] = json_decode($package['features'], true) ?: [];
+    }
+    
+    echo json_encode(['success' => true, 'packages' => $packages]);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+}
+?>
