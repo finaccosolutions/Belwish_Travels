@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require '/home/u443589701/domains/belwishtravels.com/secure/config.php';
+require '../../secure/config.php';
 
 try {
     $pdo = getDbConnection();

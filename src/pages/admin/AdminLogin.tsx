@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Eye, EyeOff } from 'lucide-react';
-import { adminAPI } from '../../utils/api';
 
 const AdminLogin = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -16,15 +15,31 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await adminAPI.login(credentials);
-      if (response.data.success) {
-        localStorage.setItem('admin_token', response.data.token);
+      const response = await fetch('/api/admin/login.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials)
+      });
+
+      const data = await response.json();
+      console.log('Login response:', data); // Debug log
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      if (data.success) {
+        localStorage.setItem('admin_token', data.token);
+        localStorage.setItem('admin_user', JSON.stringify(data.user));
         navigate('/admin/dashboard');
       } else {
-        setError(response.data.message || 'Login failed');
+        setError(data.message || 'Invalid credentials');
       }
     } catch (error) {
-      setError('Login failed. Please check your credentials.');
+      console.error('Login error:', error);
+      setError(error instanceof Error ? error.message : 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
