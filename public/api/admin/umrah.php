@@ -10,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require '../../../secure/config.php';
-require '../../../secure/auth.php';
+require '/home/u443589701/domains/belwishtravels.com/secure/config.php';
+require '/home/u443589701/domains/belwishtravels.com/secure/auth.php';
 
 // Verify admin authentication
 if (!verifyAdminToken()) {
